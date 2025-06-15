@@ -18,4 +18,4 @@ y = data['label']
 model = RandomForestClassifier()
 model.fit(X, y)
 
-joblib.dump(model, 'model/model.pkl')
+model = joblib.load('model.pkl')
