@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quant Investment App</title>
+</head>
+<body>
+    <h1>Enter Stock Data</h1>
+    <form action="/predict" method="post" enctype="multipart/form-data">
+        <label>P/E Ratio: <input type="text" name="pe_ratio"></label><br>
+        <label>P/B Ratio: <input type="text" name="pb_ratio"></label><br>
+        <label>Debt/Equity Ratio: <input type="text" name="de_ratio"></label><br>
+        <label>Market Cap (M): <input type="text" name="market_cap"></label><br>
+        <label>Revenue Growth (%): <input type="text" name="revenue_growth"></label><br><br>
+        <label>Or upload CSV: <input type="file" name="csv_file"></label><br><br>
+        <input type="submit" value="Predict">
+    </form>
+</body>
+</html>
