@@ -1,27 +1,43 @@
 from flask import Flask, render_template, request
-from model.predict import predict_from_input, predict_from_csv
+import joblib
+import numpy as np
 
 app = Flask(__name__)
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+# Load the trained model and scaler
+model = joblib.load('model.pkl')
+scaler = joblib.load('scaler.pkl')
 
-@app.route('/predict', methods=['POST'])
-def predict():
-    if 'csv_file' in request.files and request.files['csv_file'].filename != '':
-        file = request.files['csv_file']
-        result = predict_from_csv(file)
-    else:
-        features = {
-            'pe_ratio': float(request.form['pe_ratio']),
-            'pb_ratio': float(request.form['pb_ratio']),
-            'de_ratio': float(request.form['de_ratio']),
-            'market_cap': float(request.form['market_cap']),
-            'revenue_growth': float(request.form['revenue_growth']),
-        }
-        result = predict_from_input(features)
-    return render_template('result.html', result=result)
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    prediction = None
+    confidence = None
+
+    if request.method == 'POST':
+        try:
+            # Read input from form
+            inputs = [
+                float(request.form['pe_ratio']),
+                float(request.form['ps_ratio']),
+                float(request.form['pb_ratio']),
+                float(request.form['debt_to_equity']),
+                float(request.form['free_cash_flow_yield']),
+                float(request.form['price_momentum_3m']),
+                float(request.form['news_sentiment_score'])
+            ]
+
+            # Scale input and predict
+            features_scaled = scaler.transform([inputs])
+            pred = model.predict(features_scaled)[0]
+            proba = model.predict_proba(features_scaled)[0][1]
+
+            prediction = "BUY" if pred == 1 else "AVOID"
+            confidence = f"{proba * 100:.2f}%"
+        except Exception as e:
+            prediction = "Error: Invalid input"
+            confidence = str(e)
+
+    return render_template("index.html", prediction=prediction, confidence=confidence)
 
 if __name__ == '__main__':
     app.run(debug=True)
