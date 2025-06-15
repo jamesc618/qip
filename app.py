@@ -41,5 +41,6 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug=True)
-git commit -m "Add model.pkl"
+git add app.py
+git commit -m "Removed invalid git command"
 git push origin main
