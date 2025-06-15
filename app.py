@@ -41,3 +41,6 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug=True)
+git add model.pkl
+git commit -m "Add model.pkl"
+git push origin main
