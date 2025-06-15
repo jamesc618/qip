@@ -1,7 +1,7 @@
 import pandas as pd
 import joblib
 
-model = joblib.load('model/model.pkl')
+model = joblib.load('model.pkl')
 
 def predict_from_input(features):
     df = pd.DataFrame([features])
